@@ -4,6 +4,7 @@ import Map from './components/Map/Map';
 import CompanyList from './components/CompanyList/CompanyList';
 import Home from './components/Home/Home';
 import Navbar from './components/Navbar/Navbar'
+import 'leaflet/dist/leaflet.css';
 
 function App() {
   return (
