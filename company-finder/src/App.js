@@ -6,6 +6,7 @@ import Home from './components/Home/Home';
 import Navbar from './components/Navbar/Navbar'
 import 'leaflet/dist/leaflet.css';
 
+
 function App() {
   return (
     <div>
