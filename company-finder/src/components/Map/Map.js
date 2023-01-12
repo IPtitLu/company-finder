@@ -66,6 +66,7 @@ function Map() {
     return () => clearInterval(interval);
   }, [location, businesses.results]);
 
+  
   if (error) {
     return <p>{error}</p>;
   }
