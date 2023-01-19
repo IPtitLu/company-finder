@@ -1,26 +1,44 @@
-import './App.css';
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Map from './components/Map/Map';
-import CompanyList from './components/CompanyList/CompanyList';
-import Home from './components/Home/Home';
-import Navbar from './components/Navbar/Navbar'
-import 'leaflet/dist/leaflet.css';
+import "./App.css";
+import {
+    BrowserRouter as Router,
+    Route,
+    Routes,
+    Navigate,
+} from "react-router-dom";
+import Map from "./components/Map/Map";
+import Login from "./components/Login/Login";
+import Navbar from "./components/Navbar/Navbar";
+import "leaflet/dist/leaflet.css";
 
 function App() {
-  return (
-    <div>
-      <Navbar/>
-      <Router>
-      <Routes>
-      <Route path="/map" element={<Map />} />
-      <Route path="/list" element={<CompanyList/>} />
-      <Route path="/home" element={<Home/>} />
-      </Routes>
-      </Router>
-    </div>
-  );
-  
+    const token = localStorage.getItem("token");
+    return (
+        <div>
+            <Navbar />
+            <Router>
+                <Routes>
+                    <Route
+                        path="/map"
+                        element={
+                            token != null ? <Map /> : <Navigate to="/login" />
+                        }
+                    />
+                    <Route
+                        path="/"
+                        element={
+                            token == null ? <Map /> : <Navigate to="/login" />
+                        }
+                    />
+                    <Route
+                        path="/login"
+                        element={
+                            token == null ? <Login /> : <Navigate to="/" />
+                        }
+                    />
+                </Routes>
+            </Router>
+        </div>
+    );
 }
-
 
 export default App;
