@@ -34,6 +34,12 @@ const CompanyList = ({ businessesArray }) => {
                                         >
                                             LOCALISATION
                                         </th>
+                                        <th
+                                            scope="col"
+                                            className="text-sm font-medium text-white px-6 py-4 text-left"
+                                        >
+                                            ACTIVITE
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -97,15 +103,33 @@ const CompanyList = ({ businessesArray }) => {
                                                     })()}
                                                 </td>
                                                 <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                    {item.siege
-                                                        .adresse_complete !==
+                                                    {item
+                                                        .matching_etablissements[0]
+                                                        .geo_adresse !==
                                                     null ? (
-                                                        item.siege
-                                                            .adresse_complete
+                                                        item
+                                                            .matching_etablissements[0]
+                                                            .geo_adresse
                                                     ) : (
                                                         <p className="text-neutral-400">
                                                             adresse complète
                                                             privée
+                                                        </p>
+                                                    )}
+                                                </td>
+                                                <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                                    {item
+                                                        .matching_etablissements[0]
+                                                        .activite_principale !==
+                                                    null ? (
+                                                        item
+                                                            .matching_etablissements[0]
+                                                            .activite_principale
+                                                    ) : (
+                                                        <p className="text-neutral-400">
+                                                            activité principale
+                                                            privées ou
+                                                            indisponibles
                                                         </p>
                                                     )}
                                                 </td>
