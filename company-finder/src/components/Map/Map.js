@@ -5,11 +5,16 @@ import CompanyList from "../CompanyList/CompanyList";
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
 
-function Map() {
+function Map({ token }) {
     const [error, setError] = useState(null);
     const [businesses, setBusinesses] = useState([]);
     const [cityName, setCityName] = useState("");
     const [postalCode, setPostalCode] = useState("");
+    const [position, setPosition] = useState({
+        lat: 98.699739,
+        lng: 52.338097,
+    });
+    const [map, setmap] = useState(null);
 
     let DefaultIcon = L.icon({
         iconUrl: icon,
@@ -21,27 +26,43 @@ function Map() {
     useEffect(() => {
         async function fetchCityName() {
             if (cityName.length > 0) {
-                const response = await fetch(
-                    `https://recherche-entreprises.api.gouv.fr/${cityName}`
-                );
-                const data = await response.json();
+                // const response = await fetch(
+                //     `http://localhost:3000/cities/${cityName}`
+                // );
+                // const data = await response.json();
 
+                // if (data.error) {
+                //     setError(data.error);
+                // } else {
+                //     setPostalCode(data.results.postalCode);
+                // }
+                const response = await fetch(
+                    `http://localhost:3000/cities/${cityName}`,
+                    {
+                        headers: {
+                            "Content-type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+
+                const data = await response.json();
                 if (data.error) {
                     setError(data.error);
                 } else {
-                    setPostalCode(data.results.postalCode);
+                    setPostalCode(data.postalCode);
                 }
             }
         }
 
         fetchCityName();
-    }, [postalCode]);
+    }, [cityName]);
 
     useEffect(() => {
         async function fetchBusinesses() {
-            if (cityName.length > 0) {
+            if (postalCode !== "") {
                 const response = await fetch(
-                    `https://recherche-entreprises.api.gouv.fr/search?code_postal=44100`
+                    `https://recherche-entreprises.api.gouv.fr/search?code_postal=${postalCode}`
                 );
                 const data = await response.json();
 
@@ -54,11 +75,28 @@ function Map() {
         }
 
         fetchBusinesses();
-    }, [cityName]);
+    }, [postalCode]);
+
+    useEffect(() => {
+        if (businesses.length > 0) {
+            setPosition({
+                lat: businesses[0].matching_etablissements[0].latitude,
+                lng: businesses[0].matching_etablissements[0].longitude,
+            });
+        }
+    }, [businesses]);
 
     if (error) {
         return <p>{error}</p>;
     }
+
+    const Recenter = ({ lat, lng }) => {
+        const map = useMap();
+        useEffect(() => {
+            map.setView([lat, lng]);
+        }, [lat, lng]);
+        return null;
+    };
 
     return (
         <div className="mx-auto max-w-screen-xl flex justify-center items-center flex-wrap">
@@ -84,42 +122,49 @@ function Map() {
                     />
                 </form>
             </div>
-            <MapContainer
-                center={[
-                    businesses.length > 0
-                        ? businesses[0].matching_etablissements[0].latitude !=
-                          null
-                        : 47.218371,
-                    businesses.length > 0
-                        ? businesses[0].matching_etablissements[0].longitude !=
-                          null
-                        : -1.553621,
-                ]}
-                zoom={12}
-                className=" mb-10"
-            >
-                <TileLayer
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                />
-                {businesses.length > 0 ? (
-                    businesses.map((business) => (
-                        <Marker
-                            key={business.nom_complet}
-                            position={[
-                                business.matching_etablissements[0].latitude,
-                                business.matching_etablissements[0].longitude,
-                            ]}
-                        >
-                            <Popup>{business.nom_complet}</Popup>
-                        </Marker>
-                    ))
-                ) : (
-                    <div>Loading..</div>
-                )}
-                {};
-            </MapContainer>
-
+            {businesses.length > 0 ? (
+                <MapContainer
+                    center={position}
+                    zoom={14}
+                    className="mb-10"
+                    whenCreated={setmap}
+                >
+                    <Recenter lat={position.lat} lng={position.lng} />
+                    <TileLayer
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                    />
+                    {businesses.length > 0 ? (
+                        businesses.map((business) => (
+                            <Marker
+                                key={business.nom_complet}
+                                position={[
+                                    business.matching_etablissements[0]
+                                        .latitude,
+                                    business.matching_etablissements[0]
+                                        .longitude,
+                                ]}
+                            >
+                                <Popup>{business.nom_complet}</Popup>
+                            </Marker>
+                        ))
+                    ) : (
+                        <div>Loading..</div>
+                    )}
+                    {};
+                </MapContainer>
+            ) : (
+                <MapContainer
+                    center={[47.218371, -1.553621]}
+                    zoom={12}
+                    className=" mb-10"
+                >
+                    <TileLayer
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                    />
+                </MapContainer>
+            )}
             <CompanyList businessesArray={businesses} />
         </div>
     );

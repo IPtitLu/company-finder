@@ -20,13 +20,21 @@ function App() {
                     <Route
                         path="/map"
                         element={
-                            token != null ? <Map /> : <Navigate to="/login" />
+                            token != null ? (
+                                <Map token={token} />
+                            ) : (
+                                <Navigate to="/login" />
+                            )
                         }
                     />
                     <Route
                         path="/"
                         element={
-                            token == null ? <Map /> : <Navigate to="/login" />
+                            token != null ? (
+                                <Map token={token} />
+                            ) : (
+                                <Navigate to="/login" />
+                            )
                         }
                     />
                     <Route
