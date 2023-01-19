@@ -60,8 +60,6 @@ function Map() {
         return <p>{error}</p>;
     }
 
-    console.log("businesses : ", businesses);
-
     return (
         <div className="mx-auto max-w-screen-xl flex justify-center items-center flex-wrap">
             <div className="w-2/4 flex justify-center items-center mb-20">
