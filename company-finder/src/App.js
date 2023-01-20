@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import Map from "./components/Map/Map";
 import Login from "./components/Login/Login";
+import Register from "./components/Register/Register";
 import Navbar from "./components/Navbar/Navbar";
 import "leaflet/dist/leaflet.css";
 
@@ -41,6 +42,12 @@ function App() {
                         path="/login"
                         element={
                             token == null ? <Login /> : <Navigate to="/" />
+                        }
+                    />
+                                        <Route
+                        path="/register"
+                        element={
+                            token == null ? <Register /> : <Navigate to="/" />
                         }
                     />
                 </Routes>

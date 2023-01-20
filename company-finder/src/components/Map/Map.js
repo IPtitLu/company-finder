@@ -26,18 +26,8 @@ function Map({ token }) {
     useEffect(() => {
         async function fetchCityName() {
             if (cityName.length > 0) {
-                // const response = await fetch(
-                //     `http://localhost:3000/cities/${cityName}`
-                // );
-                // const data = await response.json();
-
-                // if (data.error) {
-                //     setError(data.error);
-                // } else {
-                //     setPostalCode(data.results.postalCode);
-                // }
                 const response = await fetch(
-                    `http://localhost:3000/cities/${cityName}`,
+                    `https://company-finder.onrender.com/cities/${cityName}`,
                     {
                         headers: {
                             "Content-type": "application/json",
@@ -145,7 +135,13 @@ function Map({ token }) {
                                         .longitude,
                                 ]}
                             >
-                                <Popup>{business.nom_complet}</Popup>
+                                <Popup>
+                                    <div className="flex flex-row justify-center items-center">
+                                        <h3 className="text-bold">
+                                            {business.nom_complet}
+                                        </h3>
+                                    </div>
+                                </Popup>
                             </Marker>
                         ))
                     ) : (

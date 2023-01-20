@@ -7,44 +7,73 @@ const Login = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [dataResponse, setDataResponse] = useState([]);
     const [dataError, setDataError] = useState(null);
-    const [state, setState] = useState({ username: "", password: "" });
+    const [state, setState] = useState({ pseudo: "", password: "", name: "", mail: "" });
     const navigate = useNavigate();
 
-    const handleInputChangeUsername = (event) => {
+    const handleInputChangePseudo = (event) => {
         const target = event.target;
         const value = target.value;
 
         setState({
-            username: value,
+            pseudo: value,
             password: state.password,
+            name: state.name,
+            mail: state.mail
         });
     };
-    const handleInputChange = (event) => {
+    const handleInputChangeMail = (event) => {
         const target = event.target;
         const value = target.value;
 
         setState({
-            username: state.username,
-            password: value,
+            pseudo: state.pseudo,
+            password: state.password,
+            name: state.name,
+            mail: value
         });
     };
+    const handleInputChangeName = (event) => {
+        const target = event.target;
+        const value = target.value;
+
+        setState({
+            pseudo: state.pseudo,
+            password: state.password,
+            name: value,
+            mail: state.mail
+        });
+    };
+    const handleInputChangePassword = (event) => {
+        const target = event.target;
+        const value = target.value;
+
+        setState({
+            pseudo: state.pseudo,
+            password: value,
+            name: state.name,
+            mail: state.mail
+        });
+    };
+
 
     const handleSubmit = (event) => {
         event.preventDefault();
         // Envoyer une requête de connexion avec les données d'utilisateur saisies
 
-        const username = state.username;
+        const pseudo = state.pseudo;
         const password = state.password;
+        const name = state.name;
+        const mail = state.mail;
         axios
-            .post("https://company-finder.onrender.com/api/login", {
-                username: username,
+            .post("https://company-finder.onrender.com/register", {
+                name: name,
+                pseudo: pseudo,
+                mail: mail,
                 password: password,
             })
             .then((res) => {
                 if (res.status === 200) {
-                    localStorage.setItem("token", res.data.token);
-
-                    window.location.reload();
+                    window.location.href= '/login';
                 }
             })
             .catch((error) => {
@@ -58,7 +87,7 @@ const Login = () => {
             <div className="w-full max-w-md relative max-h-screen bg-card-gray mx-2 flex items-center flex-col">
                 <div className="w-full max-h-screen profile-page flex justify-center items-center flex-col px-10">
                     <h3 className="w-full text-center font-bold text-3xl mb-10">
-                        Connexion
+                        Création du compte
                     </h3>
                     {isSubmitted ? (
                         <p>Login success, you can access now to your cart !</p>
@@ -71,19 +100,41 @@ const Login = () => {
                                 <input
                                     type="text"
                                     name="username"
-                                    value={state.username}
-                                    onChange={handleInputChangeUsername}
+                                    value={state.pseudo}
+                                    onChange={handleInputChangePseudo}
                                     required
-                                    placeholder="Email"
+                                    placeholder="Pseudo"
+                                    className="w-full border-2 px-4 py-4 border-orange input"
+                                />
+                            </label>
+                            <label className="mb-10 w-full ">
+                                <input
+                                    type="text"
+                                    name="mail"
+                                    value={state.mail}
+                                    onChange={handleInputChangeMail}
+                                    required
+                                    placeholder="Mail"
+                                    className="w-full border-2 px-4 py-4 border-orange input"
+                                />
+                            </label>
+                            <label className="mb-10 w-full ">
+                                <input
+                                    type="text"
+                                    name="name"
+                                    value={state.name}
+                                    onChange={handleInputChangeName}
+                                    required
+                                    placeholder="Name"
                                     className="w-full border-2 px-4 py-4 border-orange input"
                                 />
                             </label>
                             <label className="mb-10 w-full ">
                                 <input
                                     type="password"
-                                    name="pass"
+                                    name="password"
                                     value={state.password}
-                                    onChange={handleInputChange}
+                                    onChange={handleInputChangePassword}
                                     required
                                     placeholder="Password"
                                     className="w-full border-2 px-4 py-4 border-orange input"
@@ -96,7 +147,7 @@ const Login = () => {
                             ) : (
                                 ""
                             )}
-                            <a href="/" className="w-full">
+                            <a href="/login" className="w-full">
                                 <input
                                     type="submit"
                                     value="Submit"
@@ -105,8 +156,8 @@ const Login = () => {
                             </a>
                         </form>
                     )}
-                    <a href="/register" className="w-full cursor-pointer hover:text-blue text-center">
-                        Créer son compte
+                    <a href="/login" className="w-full cursor-pointer hover:text-blue text-center">
+                        Se connecter
                     </a>
                 </div>
             </div>
