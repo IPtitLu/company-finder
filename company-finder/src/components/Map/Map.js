@@ -93,7 +93,7 @@ function Map({ token }) {
             <div className="w-2/4 flex justify-center items-center mb-20">
                 <form className="flex flex-wrap column justify-center flex-col">
                     <label className="text-center mb-4">
-                        Entre un code postal ci-dessous
+                        Entre un nom de ville ci-dessous
                     </label>
                     <input
                         className="border border-2 rounded-md p-2"
